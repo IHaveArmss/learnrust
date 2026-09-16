@@ -29,12 +29,9 @@ fn grade(score:i8)->String{
     }
         
 }
-fn _ex2(){
-    
-    
-}
+
 fn main(){
-    _ex2();
+    _ex1();
 }
 
 //ex1
@@ -46,11 +43,3 @@ fn main(){
 // 4. Create a variable `total` that stores `base * counter`.
 // 5. Print all three values using println!.
 
-//ex2
-// Topic: Functions, Parameters, and Return Values
-// Task:
-// 1. Write a function `grade(score: i32) -> String`.
-//    - If score >= 90, return "A".
-//    - Else if score >= 75, return "B".
-//    - Otherwise, return "Needs Improvement".
-// 2. In an ex2 function, call `grade` with different scores (e.g. 95, 80, 60) and print the results.
