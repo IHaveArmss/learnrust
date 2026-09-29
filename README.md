@@ -1,6 +1,6 @@
 # 🦀 Rust Ownership & Memory Guide: The Teacher's Handbook
 *A comprehensive guide to mastering Ownership, Borrowing, Traits, and Memory Layout.*
-
+for each exercise i want you to commend _ex1 .... till _ex10 or whatever max exercise number you think is right
 ---
 
 ## 🎯 What We Want to Achieve
