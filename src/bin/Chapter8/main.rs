@@ -251,6 +251,7 @@ fn _ex11() {
     let mut map:HashMap<&String,&String> = HashMap::new();
     map.insert(&field_name, &field_value);
     // TODO: Demonstrate ownership transfer when inserting Strings into a HashMap
+    println!("{}",field_name);
 }   
 
 // Exercise 12: Updating a Hash Map (Overwriting, Entry API, and Mutating in Place)
@@ -271,6 +272,25 @@ fn _ex11() {
 fn _ex12() {
     println!("\n--- Exercise 12: Updating a Hash Map ---");
     // TODO: Implement overwriting, the .entry().or_insert() API, and word frequency counting
+    let mut map_new = HashMap::<String,i32>::new();
+    map_new.insert("Blue".to_string(), 20);
+    if let Some(temp) = map_new.get("Blue"){
+        println!("{}",temp);
+    }
+    map_new.insert("Blue".to_string(), 30);
+    if let Some(temp) = map_new.get("Blue"){
+        println!("{}",temp);
+    }
+    map_new.entry("Blue".to_string()).or_insert(40);
+    map_new.entry("Yellow".to_string()).or_insert(40);
+    for (key,value) in map_new.iter(){
+        println!("{} {}",key,value);
+    }
+    let temp_string = "hello world wonderful world hello hello";
+    for item in temp_string.rsplit_terminator(" "){
+        let count = map_new.entry(item.to_string()).or_insert(0);
+        *count += 1;
+    }
 }
 
 // ------------------------------------------------------------------------------
@@ -283,9 +303,43 @@ fn _ex12() {
 //       - Mode: Count occurrences of each number using a `HashMap`, then find the key
 //         with the maximum count.
 //   - In `_challenge1`, test with a sample list e.g. `[42, 1, 36, 12, 36, 5, 24, 36, 8]`.
+fn median_and_mode(numbers:&[i32])->(f64,i32)
+{
+    let mut sorted = numbers.to_vec();
+    sorted.sort();
+    let mut new_map = HashMap::<&i32,i32>::new();
+    for number in sorted.iter(){
+        let count = new_map.entry(number).or_insert(0);
+        *count +=1;
+    }
+    let mut temp_tupple1:f64 = 0.0;
+    if sorted.len()%2==1{
+        temp_tupple1 = sorted[sorted.len()/2].into();
+    }
+    else{
+        let temp1: f64 = sorted[sorted.len()/2].into();
+        let temp2: f64 = sorted[sorted.len()/2-1].into();
+        temp_tupple1 = (temp1+temp2)/2.0;
+    }
+    println!("{:?}",sorted);
+    println!("{}",temp_tupple1);
+    let mut result:(f64,i32) = (0.0,1); 
+    let max_nr = new_map.iter().max_by_key(|&(_,count)|count);
+    match max_nr{
+        Some(var) => result.1 = *var.1,
+        _ => (),
+    }
+    result.0 = temp_tupple1;
+    result
+    //(temp_tupple1,)
+}
 fn _challenge1() {
-    println!("\n--- Challenge 1: Median and Mode of an Integer List ---");
     // TODO: Calculate median and mode using Vec and HashMap
+
+    println!("\n--- Challenge 1: Median and Mode of an Integer List ---");
+    let mut temp_vec = [42, 1, 36, 12, 36, 5, 24, 36,8];
+    println!("{:?}",median_and_mode(&temp_vec));
+
 }
 
 // Challenge 2: Pig Latin Converter
@@ -331,9 +385,9 @@ fn main() {
     _ex8();
     _ex9();
     _ex10();
-    // _ex11();
-    // _ex12();
-    // _challenge1();
+    _ex11();
+    _ex12();
+    _challenge1();
     // _challenge2();
     // _challenge3();
 }
