@@ -1,3 +1,7 @@
+use std::collections::HashMap;
+
+use crate::company_engine::{command_caller, hash_map};
+
 // ==============================================================================
 // CHAPTER 8: COMMON COLLECTIONS - PRACTICE CHALLENGES
 // ==============================================================================
@@ -212,10 +216,11 @@ fn _ex9() {
 //   - Insert "Blue" -> 10, "Yellow" -> 50.
 //   - Retrieve the score for "Blue" using `.get(&key)` and `.copied().unwrap_or(0)`.
 //   - Iterate over all key-value pairs using `for (key, value) in &scores` and print them.
-use std::collections::HashMap;
+
 fn _ex10() {
     println!("\n--- Exercise 10: Basic HashMap Creation, Insertion, and Retrieval ---");
     // TODO: Create HashMap, insert key-value pairs, query values, and iterate
+    
     let mut map1:HashMap<String, i32> = HashMap::new();
     map1.insert("Blue".to_string(),10);
     map1.insert("Yellow".to_string(),50);
@@ -337,7 +342,7 @@ fn _challenge1() {
     // TODO: Calculate median and mode using Vec and HashMap
 
     println!("\n--- Challenge 1: Median and Mode of an Integer List ---");
-    let mut temp_vec = [42, 1, 36, 12, 36, 5, 24, 36,8];
+    let temp_vec = [42, 1, 36, 12, 36, 5, 24, 36,8];
     println!("{:?}",median_and_mode(&temp_vec));
 
 }
@@ -351,8 +356,32 @@ fn _challenge1() {
 //             (e.g. "apple" -> "apple-hay", "eat" -> "eat-hay").
 //       - Keep in mind UTF-8 character boundaries and handling multiple words!
 //   - In `_challenge2`, convert "apple first banana eat world" and print the result.
+fn to_pig_latin(to_transform:String)->String{
+    for str_temp in to_transform.rsplit_terminator(" "){
+        //transformare
+        let mut iter_chars = str_temp.chars();
+        let first_letter = iter_chars.next();
+        match first_letter{
+            Some(var) =>{
+                if "aeiouAEIOU".contains(var){
+                    return format!("{str_temp}-hay");
+                }
+                else{
+                    return format!("{}-{}ay",iter_chars.as_str(),var);
+                }
+            }
+            _ => (),
+        }
+    }
+    return String::new();
+
+        
+}
+
 fn _challenge2() {
     println!("\n--- Challenge 2: Pig Latin Converter ---");
+    println!("{}",to_pig_latin("banana".to_string()));
+
     // TODO: Convert words into Pig Latin following UTF-8 safe text transformations
 }
 
@@ -364,10 +393,54 @@ fn _challenge2() {
 //       3. Retrieve a list of all employees in the entire company, grouped by department
 //          and sorted alphabetically (both department names and employee names).
 //   - In `_challenge3`, populate several departments, query "Engineering", and print
+    mod company_engine{
+        use crate::HashMap;
+
+        pub struct hash_map{
+            pub map : HashMap<String,Vec<String>>,
+        }
+        impl hash_map{
+            pub fn new()->Self{
+                hash_map { 
+                    map: HashMap::new(),
+                }
+            }
+        }
+        enum Commands{
+            Add,
+            Sort,
+            All,
+            None
+        }
+        pub fn command_caller(command:String,company_map: hash_map)//->Result<String,String>//
+        {
+            let word:Vec<&str>= command.split_whitespace().collect();
+
+            let command_iter = word.first();
+            if let Some((len,st)) = command_iter{
+                println!("{} {}",st,len);
+            }
+            else{
+                println!("moew");
+            }
+        }
+        fn add_employee(command : String)//->Result<String,String>//
+        {
+            //despartire date
+            
+
+        }
+        //add employee returneaza Rezult
+
+        //sort list from specific deparment adica ia cheia apoi sorteaza alfabetic toti employees care sunt separati prin ,
+        //lista cu toti employees grupati pe departament sortat alfabetic departament si dupa employee name
+    }
 //     the complete company directory.
 fn _challenge3() {
     println!("\n--- Challenge 3: Company Employee Directory CLI / Query Engine ---");
     // TODO: Implement department-based employee directory using HashMap<String, Vec<String>>
+    let mut company_map:company_engine::hash_map = company_engine::hash_map::new();
+    command_caller("Add Sally to Engineering".to_string(),company_map);
 }
 
 // ==============================================================================
@@ -388,6 +461,6 @@ fn main() {
     _ex11();
     _ex12();
     _challenge1();
-    // _challenge2();
-    // _challenge3();
+    _challenge2();
+    _challenge3();
 }
