@@ -491,15 +491,25 @@ use crate::HashMap;
 fn _challenge3() {
     println!("\n--- Challenge 3: Company Employee Directory CLI / Query Engine ---");
     // TODO: Implement department-based employee directory using HashMap<String, Vec<String>>
+    
     let mut company_map:company_engine::hash_map = company_engine::hash_map::new();
-    command_caller("Add Sally to Engineering".to_string(),&mut company_map);
+    let mut buffer = String::new();
+    loop {
+        match std::io::stdin().read_line(&mut buffer){
+            Ok(_var) =>command_caller(buffer.clone(), &mut company_map) ,
+            Err(err) => println!("Error {err}"),
+        }        
+        buffer.clear();
+    }
+    
+    /*command_caller("Add Sally to Engineering".to_string(),&mut company_map);
     command_caller("Add Ayan to Engineering".to_string(),&mut company_map);
     command_caller("Add Rares to Math".to_string(),&mut company_map);
     command_caller("Add Sally Engineering".to_string(),&mut company_map);
     command_caller("Add Polo to Math".to_string(),&mut company_map);
     command_caller("Sort Engineering".to_string(),&mut company_map);
     command_caller("Sort Math meow".to_string(),&mut company_map);
-    command_caller("All Math meow".to_string(),&mut company_map);
+    command_caller("All Math meow".to_string(),&mut company_map);*/
 
 
     //company_map.print();
