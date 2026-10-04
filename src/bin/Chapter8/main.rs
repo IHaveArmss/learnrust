@@ -394,7 +394,10 @@ fn _challenge2() {
 //          and sorted alphabetically (both department names and employee names).
 //   - In `_challenge3`, populate several departments, query "Engineering", and print
     mod company_engine{
-        use crate::HashMap;
+
+use std::cmp;
+
+use crate::HashMap;
 
         pub struct hash_map{
             pub map : HashMap<String,Vec<String>>,
@@ -405,30 +408,79 @@ fn _challenge2() {
                     map: HashMap::new(),
                 }
             }
+            pub fn add(&mut self,key:String,value:String ){
+                self.map.entry(key).or_default().push(value);
+            }
+            pub fn print(& self){
+                for (key,value) in self.map.iter(){
+                    println!("{}:{:?}",key,value);
+                }
+            }
         }
-        enum Commands{
-            Add,
-            Sort,
-            All,
-            None
-        }
-        pub fn command_caller(command:String,company_map: hash_map)//->Result<String,String>//
+        pub fn command_caller(command:String,company_map:&mut hash_map)//->Result<String,String>//
         {
-            let word:Vec<&str>= command.split_whitespace().collect();
+            let word_list:Vec<&str>= command.split_whitespace().collect();
 
-            let command_iter = word.first();
-            if let Some((len,st)) = command_iter{
-                println!("{} {}",st,len);
+            let command_iter = word_list.first();
+            match command_iter.copied(){
+                Some("Add") => {
+                    add_employee(word_list,company_map);
+                },
+                Some("Sort") => {
+                    if let Some(list) = sort_employee(word_list, company_map){
+                        println!("{:?}",list);
+                    }
+                    else{
+                        println!("no deparment found to sort");
+                    }
+                    
+                },
+                Some("All") => {
+                    let list = all_sorted_return(company_map);
+                    println!("{:?}",list);
+                },
+                _ => println!("Command not found"),
+            }
+        }
+        fn all_sorted_return(company_map :&mut hash_map)->Vec<(String,Vec<String>)>
+        {
+            let mut vec_to_return = Vec::<(String,Vec<String>)>::new();
+            
+            for item in company_map.map.keys(){
+                if let Some(list) = company_map.map.get(item) {
+                    let mut sorted_list = list.clone();
+                    sorted_list.sort();
+                    let item_insert = (item.clone(),sorted_list);
+                    vec_to_return.push(item_insert);
+                }
+    
+            }
+            vec_to_return.sort_by(|a,b|a.0.cmp(&b.0));
+            vec_to_return
+        }
+            
+    
+        fn sort_employee(word_list: Vec<&str>,company_map:&mut hash_map)->Option<Vec<String>>{
+            let department = word_list.get(1)?;
+            print!("Sorted list for {}",department);
+            if let Some(employee_list) = company_map.map.get_mut(*department){
+                employee_list.sort();
+                Some(employee_list.clone())
             }
             else{
-                println!("moew");
+                None
             }
         }
-        fn add_employee(command : String)//->Result<String,String>//
+        fn add_employee(word_list : Vec<&str>, company_map :&mut hash_map)//->Result<String,String>//
         {
-            //despartire date
-            
-
+            let department = word_list.get(3);
+            let employee = word_list.get(1);
+            if let Some(dep) = department && let Some(emp) = employee{
+                company_map.add(dep.to_string(),emp.to_string());
+            } 
+            else{
+                println!("insufficient arguments");
+            }
         }
         //add employee returneaza Rezult
 
@@ -440,7 +492,17 @@ fn _challenge3() {
     println!("\n--- Challenge 3: Company Employee Directory CLI / Query Engine ---");
     // TODO: Implement department-based employee directory using HashMap<String, Vec<String>>
     let mut company_map:company_engine::hash_map = company_engine::hash_map::new();
-    command_caller("Add Sally to Engineering".to_string(),company_map);
+    command_caller("Add Sally to Engineering".to_string(),&mut company_map);
+    command_caller("Add Ayan to Engineering".to_string(),&mut company_map);
+    command_caller("Add Rares to Math".to_string(),&mut company_map);
+    command_caller("Add Sally Engineering".to_string(),&mut company_map);
+    command_caller("Add Polo to Math".to_string(),&mut company_map);
+    command_caller("Sort Engineering".to_string(),&mut company_map);
+    command_caller("Sort Math meow".to_string(),&mut company_map);
+    command_caller("All Math meow".to_string(),&mut company_map);
+
+
+    //company_map.print();
 }
 
 // ==============================================================================
@@ -448,7 +510,7 @@ fn _challenge3() {
 fn main() {
     println!("--- Chapter 8: Common Collections (Vectors, Strings, Hash Maps) ---");
     // Uncomment exercises as you complete them:
-    _ex1();
+    /*_ex1();
     _ex2();
     _ex3();
     _ex4();
@@ -459,7 +521,7 @@ fn main() {
     _ex9();
     _ex10();
     _ex11();
-    _ex12();
+    _ex12();*/
     _challenge1();
     _challenge2();
     _challenge3();
